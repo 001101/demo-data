@@ -3,5 +3,10 @@
     "description": "Sulu demo data",
     "license": "MIT",
     "type": "project",
-    "require": {}
+    "require": {},
+    "extra": {
+        "branch-alias": {
+            "dev-develop": "2.0-dev"
+        }
+    }
 }
