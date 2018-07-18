@@ -7,7 +7,7 @@
 #
 # Host: 127.0.0.1 (MySQL 5.7.21)
 # Datenbank: su_demo_2_0
-# Erstellt am: 2018-06-05 06:42:19 +0000
+# Erstellt am: 2018-07-18 23:10:11 +0000
 # ************************************************************
 
 
@@ -204,6 +204,40 @@ CREATE TABLE `ca_category_meta` (
 
 
 
+# Export von Tabelle ca_category_translation_keywords
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `ca_category_translation_keywords`;
+
+CREATE TABLE `ca_category_translation_keywords` (
+  `idKeywords` int(11) NOT NULL,
+  `idCategoryTranslations` int(11) NOT NULL,
+  PRIMARY KEY (`idKeywords`,`idCategoryTranslations`),
+  KEY `IDX_D15FBE37F9FC9F05` (`idKeywords`),
+  KEY `IDX_D15FBE3717CA14DA` (`idCategoryTranslations`),
+  CONSTRAINT `FK_D15FBE3717CA14DA` FOREIGN KEY (`idCategoryTranslations`) REFERENCES `ca_category_translations` (`id`),
+  CONSTRAINT `FK_D15FBE37F9FC9F05` FOREIGN KEY (`idKeywords`) REFERENCES `ca_keywords` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+
+
+# Export von Tabelle ca_category_translation_medias
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `ca_category_translation_medias`;
+
+CREATE TABLE `ca_category_translation_medias` (
+  `idCategoryTranslations` int(11) NOT NULL,
+  `idMedia` int(11) NOT NULL,
+  PRIMARY KEY (`idCategoryTranslations`,`idMedia`),
+  KEY `IDX_39FC41BA17CA14DA` (`idCategoryTranslations`),
+  KEY `IDX_39FC41BA7DE8E211` (`idMedia`),
+  CONSTRAINT `FK_39FC41BA17CA14DA` FOREIGN KEY (`idCategoryTranslations`) REFERENCES `ca_category_translations` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `FK_39FC41BA7DE8E211` FOREIGN KEY (`idMedia`) REFERENCES `me_media` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+
+
 # Export von Tabelle ca_category_translations
 # ------------------------------------------------------------
 
@@ -242,23 +276,6 @@ VALUES
 UNLOCK TABLES;
 
 
-# Export von Tabelle ca_category_translations_keywords
-# ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `ca_category_translations_keywords`;
-
-CREATE TABLE `ca_category_translations_keywords` (
-  `keyword_id` int(11) NOT NULL,
-  `category_meta_id` int(11) NOT NULL,
-  PRIMARY KEY (`keyword_id`,`category_meta_id`),
-  KEY `IDX_E5EBCA97115D4552` (`keyword_id`),
-  KEY `IDX_E5EBCA97FE24E687` (`category_meta_id`),
-  CONSTRAINT `FK_E5EBCA97115D4552` FOREIGN KEY (`keyword_id`) REFERENCES `ca_keywords` (`id`),
-  CONSTRAINT `FK_E5EBCA97FE24E687` FOREIGN KEY (`category_meta_id`) REFERENCES `ca_category_translations` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
-
-
 # Export von Tabelle ca_keywords
 # ------------------------------------------------------------
 
@@ -279,23 +296,6 @@ CREATE TABLE `ca_keywords` (
   KEY `IDX_FE02CA0B5A93713B` (`keyword`),
   CONSTRAINT `FK_FE02CA0B30D07CD5` FOREIGN KEY (`idUsersChanger`) REFERENCES `se_users` (`id`) ON DELETE SET NULL,
   CONSTRAINT `FK_FE02CA0BDBF11E1D` FOREIGN KEY (`idUsersCreator`) REFERENCES `se_users` (`id`) ON DELETE SET NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
-
-
-# Export von Tabelle category_translation_media_interface
-# ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `category_translation_media_interface`;
-
-CREATE TABLE `category_translation_media_interface` (
-  `category_translation_id` int(11) NOT NULL,
-  `media_interface_id` int(11) NOT NULL,
-  PRIMARY KEY (`category_translation_id`,`media_interface_id`),
-  KEY `IDX_16C70FE67DBA6818` (`category_translation_id`),
-  KEY `IDX_16C70FE6C2FA430E` (`media_interface_id`),
-  CONSTRAINT `FK_16C70FE67DBA6818` FOREIGN KEY (`category_translation_id`) REFERENCES `ca_category_translations` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `FK_16C70FE6C2FA430E` FOREIGN KEY (`media_interface_id`) REFERENCES `me_media` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 
@@ -3975,7 +3975,7 @@ CREATE TABLE `ta_tasks` (
   `interval_expression` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `first_execution` datetime DEFAULT NULL,
   `last_execution` datetime DEFAULT NULL,
-  `system_key` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `system_key` varchar(191) COLLATE utf8_unicode_ci DEFAULT NULL,
   `workload` longtext COLLATE utf8_unicode_ci NOT NULL COMMENT '(DC2Type:object)',
   PRIMARY KEY (`uuid`),
   UNIQUE KEY `UNIQ_B5B2FFA47280172` (`system_key`),
